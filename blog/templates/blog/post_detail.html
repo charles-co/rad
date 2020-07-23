@@ -1,0 +1,128 @@
+{% extends 'blog_base.html' %} 
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load markdown_deux_tags %}
+{% load static %}
+{% load extras %}
+{% load comments %}
+{% load comments_xtd %}
+
+
+{% block content %}
+
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8 card mb-4 col-lg-8">
+      <div class="card-body">
+        <p class="card-title mb-0" style="font-size:2.5em">{{ post.title }}</p>
+        <small><em><i class="far fa-clock"></i>{% if post.read_time <= 1 %} 1 minute{% else %} {{ post.read_time }} minutes{% endif %} read</em></small>
+        {% if post.photos %}
+        <div class='d-flex justify-content-center align-items-center carousel-wrapper w-100 bg-dark'>
+          {% if post.photos.count == 1%}
+          <img src="{{ post.photos.first.file.url }}" class="img-fluid mw-100 carousel-image">
+          {% else %}
+          {% carousel post.id %}
+          {% endif %}
+        </div>
+        {% endif %}
+        <small class="card-text text-muted"> <i class="fas fa-calendar-alt"></i> {{ post.publish_date}}
+          <p class="tags">
+            {% if post.tag.all.count == 1 %}
+            <i class="fas fa-tag"> </i> Tag:
+            {% else %}
+            <i class="fas fa-tags"> </i> Tags:
+            {% endif %}
+            {% for tag in post.tags.all %}
+            <a href="{% url 'post_by_tag' tag.slug %}" style="text-decoration:none;">
+              <span class="badge badge-secondary">{{ tag.name }}</span>
+            </a>
+            {% endfor %}
+          </p>
+        </small>
+        <div class="post-body">
+          {{ post.get_markdown }}
+        </div>
+      </div>
+      <div id="comments"></div>
+    </div>
+    <div class="d-none d-lg-block col-lg-4 justify-content-center">
+      <div class="card col-12 mb-3 " style="">
+        <div class="row">
+          <div class="col-12 px-0">
+            <h5 class="card-header bg-info lead text-center"> <i class="fas fa-book-reader"></i> You might also like th{{ similiar_post|pluralize:"is,ese" }}</h5>
+          </div>
+        </div>
+        {% for post in similiar_post %}
+        <div class={% if not forloop.last %}"row no-gutters border-bottom border-secondary"{% else %}"row no-gutters"{% endif %}>
+          <div class="col-3 p-1">
+            <img src="{{ post.photos.first.file.url }}" class="card-img img-thumbnail rounded-circle" alt="..." style="width:50px;height:50px;">
+          </div>
+          <div class="col-9">
+            <div class="card-body p-1">
+              <a href="{{ post.get_absolute_url }}" class="text-de coration-none"><p class="text-secondary mb-0">{{ post.title }}</p></a>
+              <p class="card-text"><small class="text-muted">{{ post.publish_date|timesince }}</small></p>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  
+  <div class="row d-lg-none justify-content-center">
+    <div class="card col-md-8 col-12 mb-3 " style="">
+      <div class="row">
+        <div class="col-md-12 px-0">
+          <h5 class="card-header lead bg-success text-center"> <i class="fas fa-book-reader"></i> You might also like th{{ similiar_post|pluralize:"is,ese" }}</h5>
+        </div>
+      </div>
+      {% for post in similiar_post %}
+      <div class="row no-gutters" {% if not forloop.last %}style="border-bottom:1px solid black;"{% endif %}>
+        <div class="col-md-3 col-4 py-2 justify-content-center align-items-center d-flex">
+          <img src="{{ post.photos.first.file.url }}" class="card-img img-thumbnail rounded-circle" alt="..." style="width:50px;height:50px;">
+        </div>
+        <div class="col-md-5 col-8">
+          <div class="card-body pl-0 py-2">
+            <a href="{{ post.get_absolute_url }}"><h5 class="card-title text-secondary mb-0">{{ post.title }}</h5></a>
+            <p class="card-text"><small class="text-muted">{{ post.publish_date|timesince }}</small></p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}    
+    </div>
+    <div class="card col-md-8 col-12 mb-3 mb-5">
+      <h5 class="card-header text-center"><i class="fas fa-book-reader"></i> Stay in touch</h5>
+      <div class="card-body">
+        <p class="lead"> Sign up for our newsletter to get latest updates, news & good tips on our Blog.
+          We hate spam as much as you do !
+        </p>
+        {% subscribe %}
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock content %}
+
+{% block javascript %}
+<script src="{% static 'js/react.production.min.js' %}"></script>
+<script src="{% static 'js/react-dom.production.min.js' %}"></script>
+<script>
+  window.comments_props = {% get_commentbox_props for post %};
+  {% comment %} window.comments_props_override = {
+    poll_interval: 5000 // In milliseconds.
+  }; {% endcomment %}
+</script>
+<script type="text/javascript" src="{% url 'blog:javascript-catalog' %}"></script>
+<script src="{% static 'django_comments_xtd/js/vendor~plugin-2.6.1.js' %}"></script>
+<script src="{% static 'django_comments_xtd/js/plugin-2.6.1.js' %}"></script>
+<script>
+$(function() {
+  $('[data-toggle="tooltip"]').tooltip({html: true});
+});
+</script>
+
+{% endblock %}

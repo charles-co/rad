@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">  
+    </head>
+    <body>
+        {% for post in posts %}
+        <div class="media">
+            <img src={{ post.photos.first.file.url }} class="align-self-center image-thumbnail mr-3" alt="...">
+            <div class="media-body">
+                <h5 class="mt-0">{{ post.title }}</h5>
+                <p>{{ post.body | truncatewords:30 }}</p>
+                <a href="{{domain}}{{ post.get_absolute_url }}" class="mb-0">Read More >></a>
+            </div>
+        </div>
+        {% endfor %}
+    </body>
+</html>

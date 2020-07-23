@@ -1,0 +1,20 @@
+{% load static %}
+{% for category in categories %}
+{% if category.children.all %}
+<li {% if category.slug in request.path and '/tag' not in request.path %}class="nav-item dropdown active"{% else %}class="nav-item dropdown"{% endif %}>
+    <a class="nav-link d-inline-block" href="{% url 'blog:post_by_category' category.slug %}">{{ category.name }}</a>
+    <a href="#" class="d-inline-block float-right text-decoration-none d-lg-none data-toggle" aria-haspopup="true" id="navbarDropdown" aria-expanded="false" data-toggle="dropdown" role="button" ><i class="fas fa-xs fa-plus align-middle right"></i></a>
+    <div class="dropdown-menu p-0 m-0" aria-labelledby="navbarDropdown">
+        {% for i in category.children.all %}
+        <a {% if i.slug in request.path and '/tag' not in request.path %}class="dropdown-item active"{% else %}class="dropdown-item"{% endif %} href="{% url 'blog:post_by_category' category.slug i.slug %}">{{ i.name }}</a>
+        {% if not forloop.last %}                
+        <div class="dropdown-divider m-0"></div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</li>
+{% else %}
+<li {% if category.slug in request.path %}class="nav-item active"{% else %}class="nav-item dropdown"{% endif %}>
+    <a class="nav-link" href="{% url 'blog:post_by_category' category.slug %}">{{ category.name }}</a>
+{% endif %}
+{% endfor %}

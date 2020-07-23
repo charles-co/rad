@@ -1,0 +1,63 @@
+{% extends 'blog_base.html' %}
+{% load comments %}
+{% load markdown_deux_tags %}
+{% load extras %}
+{% block content %}
+  <div class="container">
+    {% if title %}
+    <p class="display-4">{{ title }}</p>
+    {% endif %}
+    <div class="row">
+      <div class="col-lg-8 col-md-7 mt-3 left">
+        {% for post in post_list %}
+        <div class="card mb-4">
+          <div class="card-body">
+            <h2 class="card-title mb-0">{{ post.title }}</h2>
+            <small><em><i class="far fa-clock"></i>{% if post.read_time <= 1 %} 1 minute{% else %}{{ post.read_time }} minutes{% endif %} read</em></small>
+            {% if post.photos %}
+            <div class='d-flex justify-content-center align-items-center carousel-wrapper w-100 bg-dark'>
+              {% if post.photos.count == 1%}
+              <img src="{{ post.photos.first.file.url }}" class="img-fluid mw-100 carousel-image">
+              {% else %}
+              {% carousel post.id %}
+              {% endif %}
+            </div>
+            {% endif %}
+            <small class="card-text text-muted"> <i class="fas fa-calendar-alt"></i> {{ post.publish_date}}
+              {% get_comment_count for post as comment_count %}
+              {% if comment_count %}
+              &sdot;&nbsp; <i class="fas fa-comment-dots"></i> {{ comment_count }} comment{{ comment_count|pluralize }}
+              {% else %}
+              &sdot;&nbsp; <i class="fas fa-comment-dots"></i> 0 comment
+              {% endif %}
+              <p class="tags">
+              {% if post.tag.all.count == 1 %}
+              <i class="fas fa-tag"> </i> Tag:
+              {% else %}
+              <i class="fas fa-tags"> </i> Tags:
+              {% endif %}
+                {% for tag in post.tags.all %}
+                <a href="{% url 'post_by_tag' tag.slug %}" style="text-decoration:none;">
+                  <span class="badge badge-secondary">{{ tag.name }}</span>
+                </a>
+                {% endfor %}
+              </p>
+            </small>
+            <p class="card-text post-body">{{post.get_markdown|truncatewords:50}}</p>
+            <a {% if post.category.slug not in request.path %}href="{% url 'blog:post_detail' cat=post.category.parent.slug slug=post.slug%}"{% else %}href="{% url 'blog:post_detail' cat=post.category.parent.slug subcat=post.category.slug slug=post.slug %}"{% endif %}class="btn btn-primary">Read More &rarr;</a>
+          </div>
+        </div>
+        {% empty %}
+          <p>Post never dey g...
+        {% endfor %}
+      </div>
+      <div class="col-sm-12 d-md-none d-sm-block">
+        {% include 'assests/pagination.html' %}
+      </div>
+      {% side_bar %}
+    </div>
+  </div>
+  <div class="d-none d-md-block">
+    {% include 'assests/pagination.html' %}
+  </div>
+{% endblock  %}

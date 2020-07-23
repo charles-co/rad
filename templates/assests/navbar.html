@@ -1,0 +1,34 @@
+{% load extras %}
+{% load static %}
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark test">
+    <a class="navbar-brand p-0" href="{% url 'index' %}" style="width:40px;height:40px">{% include 'assests/logo.svg' %}</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+        
+            <li {% if '/fashion' not in request.path and '/music' not in request.path %}class="nav-item active"{% else %}class="nav-item"{% endif %}>
+                <a class="nav-link" href="{% url 'index' %}"><i class="fas fa-home"></i> Home <span class="sr-only">(current)</span></a>
+            </li>
+            {% category_list %}
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li><a href="#" class="nav-link text-decoration-none"><i class="fas fa-user-tie"></i> About</a></li>
+            <li>
+                <button type="button" class="btn btn-link p-0 text-decoration-none" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#contact-us">
+                    <a href="#contact-us" class="nav-link">
+                        <i class="fas fa-paper-plane"></i> Contact Us
+                    </a>
+                </button>
+            </li>  
+        </ul>
+        <form action="{% url 'search' %}" class="form-inline my-2 my-lg-0 input-group w-auto">
+            <input class="form-control" name=query type="search" placeholder="Search" aria-label="Search">
+            <div class="input-group-append">
+                <button class="btn btn-outline-success" type="submit" ><i class="fas fa-search"></i></button>
+            </div>
+        </form>
+    </div>
+</nav>
+{% contact_us %}

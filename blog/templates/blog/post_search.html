@@ -1,0 +1,29 @@
+{% extends 'blog_base.html' %} 
+{% load static %}
+{% load extras %}
+
+{% block content %}
+
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8 card mb-4 col-lg-8">
+        <h1 class="display-4">{{ total }} Result{{ total|pluralize }} found for "{{ query }}"</h1>
+        <hr>
+        <ul class="list-unstyled">
+            {% for result in results %}
+            <a href="{{ result.url }}"><li class="media">
+                <img src="{{ result.object.photos.first.file.url }}" class="mr-3 image-fluid" style="height:50px;width:50px;" alt="...">
+                <div class="media-body">
+                <h5 class="mt-0 mb-1">{{ result.title }}</h5>
+                {{ result.object.get_markdown|truncatewords:15 }}
+                </div>
+            </li></a>
+            {% empty %}
+            No post
+            {% endfor%}
+        </ul>
+    </div>
+  </div>
+</div>
+{% endblock content %}

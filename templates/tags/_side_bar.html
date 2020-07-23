@@ -1,0 +1,41 @@
+{% load extras %}
+<div class="col-lg-4 col-md-5 d-none d-md-block mt-3 float-right ">
+    <div class="card mb-5">
+        <h5 class="card-header bg-warning"><i class="fas fa-plus"></i> Recent Posts</h5>
+        <div class="card-body bg-danger">
+            <ul class="list-group list-group-flush">
+                {% for post in posts %}
+                    <li class="list-group-item bg-dark"><a class="card-text text-decoration-none text-success" href="{{ post.get_absolute_url }}"> {{ post.title }}</a>
+                    <small class="text-muted">{{ post.publish_date|timesince }}</small></li>     
+                {% empty %}
+                    Nothing 
+                {% endfor %}
+            </ul>
+        </div>
+    </div> 
+    {% subscribe %}
+</div>
+<div class="col-sm-12  d-md-none d-sm-block mt-3 mb-3">
+    <div class="card mb-5">
+        <h5 class="card-header bg-info"><i class="fas fa-plus"></i> Recent Posts</h5>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                {% for post in posts %}
+                    <li class="list-group-item"><a class="card-text text-decoration-none text-success" href="{{ post.get_absolute_url }}"> {{ post.title }}</a>
+                    <small class="text-muted">{{ post.publish_date|timesince }} ago</small></li>     
+                {% empty %}
+                    Nothing 
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="card mb-5">
+        <h5 class="card-header text-center"><i class="fas fa-book-reader"></i> Stay in touch</h5>
+        <div class="card-body">
+            <p class="lead"> Sign up for our newsletter to get latest updates, news & good tips on our Blog.
+                We hate spam as much as you do !
+            </p>
+            {% subscribe %}
+        </div>
+    </div>
+</div>

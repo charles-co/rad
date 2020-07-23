@@ -1,0 +1,1 @@
+A modern blog built with celery, solr, django & python.

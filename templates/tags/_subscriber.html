@@ -1,0 +1,7 @@
+{% load crispy_forms_tags %}
+<form method="post" id="subscribe_form">
+    {% csrf_token %}
+    {{ form | crispy }}
+    <button type="submit" class="btn btn-dark rounded-0 w-100 "><i class="fas fa-envelope"></i> Subscribe to get notified <strong>!</strong></button>
+    <div id="result"></div>
+</form>
